@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace MonoGraph
 {
@@ -6,31 +7,50 @@ namespace MonoGraph
     {
         public Graph() { }
 
-        const int m = 1;
-        const int b = 0;
+        // Equation in form c[0]x^0 + c[1] x^1 + ... + c[n - 1] x^(n-1) + c[n] x^n
+        readonly float[] constants = new float[] { 0, 0, 0, 1 };
+
+        // Graph scale
+        private const float scale = 0.01f;
 
         public void Draw(Game1 game)
         {
             // Draw axes
             Rectangle xAxis = new Rectangle(0, Drawing.Height / 2, Drawing.Width, 1);
-            Drawing.DrawRect(xAxis, Color.Gray, game);
+            Drawing.DrawRect(xAxis, Color.LightGray, game);
             Rectangle yAxis = new Rectangle(Drawing.Width / 2, 0, 1, Drawing.Height);
-            Drawing.DrawRect(yAxis, Color.Gray, game);
+            Drawing.DrawRect(yAxis, Color.LightGray, game);
 
             // For each position along the x axis
             for (int gridX = 0; gridX < Drawing.GridWidth; gridX++)
             {
-                int x = gridX - (Drawing.GridWidth / 2); // Calculate x
-                int y = m * x + b; // Calculate y
+                // Calculate x and y
+                float x = (gridX - (Drawing.GridWidth / 2)) * scale;
+                float y = 0;
+                float nextY = 0;
+                for (int power = 0; power < constants.Length; power++)
+                {
+                    float constant = constants[power];
+                    y += constant * (float)Math.Pow(x, power);
+                    nextY += constant * (float)Math.Pow(x + scale, power);
+                }
+                y /= scale;
+                nextY /= scale;
 
+                // Calculate height of segment
+                float height = (nextY - y) * Drawing.Grid;
+                if (Math.Abs(height) < 1) height = 1;
+
+                // Calculate rect x and y
                 int rectX = gridX * Drawing.Grid; // Calculate rect x
-                int rectY = (-y * Drawing.Grid) + (Drawing.Height / 2); // Calculate rect y
+                int rectY = (int)(-y * Drawing.Grid) + (Drawing.Height / 2); // Calculate rect y
 
                 // If y not within screen range, continue
-                if (rectY < 0 || rectY >= Drawing.Height) continue;
+                if (rectY < 0 || rectY - height > Drawing.Height) continue;
 
                 // Draw rect
-                Rectangle rect = new Rectangle(rectX, rectY, Drawing.Grid, Drawing.Grid);
+                if (height > 0) rectY -= (int)height;
+                Rectangle rect = new Rectangle(rectX, rectY, Drawing.Grid, (int)Math.Abs(height));
                 Drawing.DrawRect(rect, Color.Black, game);
             }
         }
