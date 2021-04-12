@@ -5,9 +5,9 @@ namespace MonoGraph
 {
     public static class Drawing
     {
-        public const int Grid = 8;
-        public const int GridWidth = 64;
-        public const int GridHeight = 64;
+        public const int Grid = 1;
+        public const int GridWidth = 512;
+        public const int GridHeight = 512;
         public const int Width = Grid * GridWidth;
         public const int Height = Grid * GridHeight;
 

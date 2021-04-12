@@ -53,6 +53,38 @@ namespace MonoGraph
                 Rectangle rect = new Rectangle(rectX, rectY, Drawing.Grid, (int)Math.Abs(height));
                 Drawing.DrawRect(rect, Color.Black, game);
             }
+
+            // Get and draw equation text
+            string equation = "";
+            // For each term
+            for (int power = constants.Length - 1; power >= 0; power--)
+            {
+                float constant = constants[power]; // Get constant
+                if (constant == 0) continue; // Continue if constant zero
+                // If equation not empty
+                if (equation != "")
+                {
+                    if (constant > 0) equation += " + "; // Positive constant
+                    else equation += " - "; // Negative constant
+                // If equation empty
+                } else if (constant < 0) equation += "-"; // Negative constant
+                if (Math.Abs(constant) != 1 || power == 0) equation += Math.Abs(constant); // Constant absolute value
+                if (power == 1) equation += "x"; // Power of one
+                else if (power != 0) equation += $"x^{power}"; // Nonzero power
+            }
+            if (equation == "") equation = "0"; // Zero if equation empty
+            equation = "y = " + equation; // Prefix with y=
+            Drawing.DrawText(equation, new Vector2(8, 8), Color.Black, game); // Draw text
+
+            // Draw scale text
+            float minX = -(Drawing.GridWidth / 2) * scale;
+            float minY = -(Drawing.GridHeight / 2) * scale;
+            string minText = $"min: ({minX}, {minY})";
+            Drawing.DrawText(minText, new Vector2(8, 24), Color.Black, game);
+            float maxX = (Drawing.GridWidth / 2) * scale;
+            float maxY = (Drawing.GridHeight / 2) * scale;
+            string maxText = $"max: ({maxX}, {maxY})";
+            Drawing.DrawText(maxText, new Vector2(8, 40), Color.Black, game);
         }
     }
 }
