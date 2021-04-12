@@ -6,45 +6,46 @@ namespace MonoGraph
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public GraphicsDeviceManager Graphics { get; private set; }
+        public SpriteBatch SpriteBatch { get; private set; }
+
+        private readonly Graph Graph = new Graph();
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Initialize graphics
+            Drawing.InitializeGraphics(this);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
+            // If escape key pressed, exit game
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
+            SpriteBatch.Begin(); // Begin sprite batch
+            Graph.Draw(this); // Draw graph
+            SpriteBatch.End(); // End sprite batch
 
             base.Draw(gameTime);
         }
