@@ -8,7 +8,7 @@ namespace MonoGraph
         public Graph() { }
 
         // Equation in form c[0]x^0 + c[1] x^1 + ... + c[n - 1] x^(n-1) + c[n] x^n
-        readonly float[] constants = new float[] { 0, 0, 0, 1 };
+        private readonly float[] constants = new float[] { 0, 0, 0, 1 };
 
         // Graph scale
         private const float scale = 0.01f;
@@ -73,7 +73,7 @@ namespace MonoGraph
                 else if (power != 0) equation += $"x^{power}"; // Nonzero power
             }
             if (equation == "") equation = "0"; // Zero if equation empty
-            equation = "y = " + equation; // Prefix with y=
+            equation = "y = " + equation; // Prefix with y =
             Drawing.DrawText(equation, new Vector2(8, 8), Color.Black, game); // Draw text
 
             // Draw scale text
